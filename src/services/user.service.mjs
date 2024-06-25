@@ -1,0 +1,8 @@
+class UserClass {
+  
+}
+
+
+export default {
+
+};

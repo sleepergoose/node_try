@@ -10,6 +10,11 @@ The `pnpm` package manager is used in the project.
 
 I am considering either the Mongoose or the MongoDB Node Driver. Most likely I will choose the MongoDB Node Driver due to its performance and complexity. But the Mongoose is also worth trying of course :)
 
+### MongoDB Node Driver
+
+1. `pnpm install mongodb --save`
+2. 
+
 ### MongoDB With Docker
 
 In the CMD or Terminal:
