@@ -1,26 +1,36 @@
-const getUserById = (req, res) => {
-  const userId = req.params.id;
+import UserService from '../services/user.service.js';
+
+class UserController {
+  constructor() {
+    this.userService = new UserService();
+  }
+
+  searchUser = async (req, res) => {
+    const users = await this.userService.searchUser(req.body);
+    res.send(users);
+  };
+
+  getUserById = async (req, res) => {
+    const userId = req.params.id;
+    const user = await this.userService.getUserById(userId);
+    res.send(user);
+  };
   
-  res.send(`Get a specific user by ID: ${userId}`);
-};
-
-const createUser = (req, res) => {
-  res.send(`Create a new user`);
-};
-
-const updateUser = (req, res) => {
-  res.send(`Update a specific user`);
-};
-
-const deleteUser = (req, res) => {
-  const userId = req.params.id;
+  createUser = async (req, res) => {
+    const user = await this.userService.createUser(req.body);
+    res.send(user);
+  };
   
-  res.send(`Delete a specific user by ID: ${userId}`);
-};
+  updateUser = async (req, res) => {
+    const user = await this.userService.updateUser(req.body);
+    res.send(user);
+  };
+  
+  deleteUser = async (req, res) => {
+    const userId = req.params.id;
+    const deleteResult = await this.userService.deleteUser(userId);
+    res.send(deleteResult);
+  };
+}
 
-export default {
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
-};
+export default UserController;

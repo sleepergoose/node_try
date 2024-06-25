@@ -1,8 +1,0 @@
-class UserClass {
-  
-}
-
-
-export default {
-
-};
