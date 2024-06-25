@@ -2,6 +2,10 @@
 
 This repository is supposed to be for hands-on learning of `NodeJS` and `React` and `MongoDB`
 
+## Package Manager
+
+The `pnpm` package manager is used in the project.
+
 ## MongoDB 
 
 I am considering either the Mongoose or the MongoDB Node Driver. Most likely I will choose the MongoDB Node Driver due to its performance and complexity. But the Mongoose is also worth trying of course :)
