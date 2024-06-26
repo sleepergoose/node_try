@@ -9,20 +9,16 @@ class UserService {
 
   createUser = async (user) => {
     const { name, age, role } = user;
-    const id = await this.mongoClientService.insertDocument(this.collectionName, { name, age, role });
-    return new User(id, name, age, role);
+    const objectId = await this.mongoClientService.insertDocument(this.collectionName, { name, age, role });
+    return new User(objectId, name, age, role);
   };
 
   updateUser = async (user) => {
-    const { name, age, role } = user;
-    const id = await this.mongoClientService.updateDocument(this.collectionName, { name, age, role });
-    return new User(id, name, age, role);
-
+    await this.mongoClientService.updateDocument(this.collectionName, user);
+    return user;
   };
 
-  deleteUser = async (user) => {
-    const id = user?.id || user?._id;
-
+  deleteUser = async (id) => {
     if (!id) {
       throw new Error('User Service: User id cannot be null or undefined.');
     }
@@ -30,12 +26,12 @@ class UserService {
     return await this.mongoClientService.deleteDocumentById(this.collectionName, id);
   };
 
-  getUserById = async (userId) => {
-    if (!userId) {
+  getUserById = async (id) => {
+    if (!id) {
       throw new Error('User Service: User id cannot be null or undefined.');
     }
 
-    return await this.mongoClientService.getUserById(this.collectionName, id);
+    return await this.mongoClientService.getDocumentById(this.collectionName, id);
   };
 
   searchUser = async (filter) => {

@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import environment from '../constants/environment.js';
 
 class MongoClientService {
@@ -19,7 +19,7 @@ class MongoClientService {
 
       return result.insertedId;
     } catch (error) {
-      console.log(err?.message);
+      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
       this.client.close();
     }
   };
@@ -36,7 +36,7 @@ class MongoClientService {
     try {
       await this.client.connect();
   
-      const filter = { _id: document._id ?? document.id};
+      const filter = { _id: ObjectId.createFromHexString(document._id) ?? ObjectId.createFromHexString(document.id) };
       
       let documentWithoutId;
 
@@ -60,7 +60,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(err?.message);
+      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
       this.client.close();
     }
   };
@@ -77,14 +77,14 @@ class MongoClientService {
     try {
       await this.client.connect();
 
-      const filter = { _id: id };
+      const filter = { _id: ObjectId.createFromHexString(id) };
       const result = await this.client.db(environment.DB_NAME).collection(collectionName).findOne(filter);
 
       this.client.close();
 
       return result;
     } catch (error) {
-      console.log(err?.message);
+      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
       this.client.close();
     }
   };
@@ -101,14 +101,14 @@ class MongoClientService {
     try {
       await this.client.connect();
 
-      const filter = { _id: id };
+      const filter = { _id: ObjectId.createFromHexString(id) };
       const result = await this.client.db(environment.DB_NAME).collection(collectionName).deleteOne(filter);
 
       this.client.close();
 
       return result;
     } catch (error) {
-      console.log(err?.message);
+      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
       this.client.close();
     }
   };
@@ -136,7 +136,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(err?.message);
+      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
       this.client.close();
     }
   };
