@@ -34,6 +34,14 @@ class UserService {
     return await this.mongoClientService.getDocumentById(this.collectionName, id);
   };
 
+  getUserByEmail = async (email) => {
+    if (!email) {
+      throw new Error('User Service: User email cannot be null or undefined.');
+    }
+
+    return await this.mongoClientService.getDocumentByEmail(this.collectionName, email);
+  };
+
   searchUser = async (filter) => {
     if (!filter) {
       throw new Error('User Service: Filter cannot be null or undefined.');

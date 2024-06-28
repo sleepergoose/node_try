@@ -89,6 +89,30 @@ class MongoClientService {
     }
   };
 
+  getDocumentByEmail = async (collectionName, email) => {
+    if (!email) {
+      throw new Error('MongoDB: the email param cannot be null or empty.');
+    }
+
+    if (!collectionName) {
+      throw new Error('MongoDB: the callection name param cannot be null or empty.');
+    }
+
+    try {
+      await this.client.connect();
+
+      const filter = { email: email };
+      const result = await this.client.db(environment.DB_NAME).collection(collectionName).findOne(filter);
+
+      this.client.close();
+
+      return result;
+    } catch (error) {
+      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.client.close();
+    }
+  };
+
   deleteDocumentById = async (collectionName, id) => {
     if (!id) {
       throw new Error('MongoDB: the id param cannot be null or empty.');
