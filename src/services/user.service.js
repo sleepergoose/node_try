@@ -8,9 +8,8 @@ class UserService {
   }
 
   createUser = async (user) => {
-    const { name, age, role } = user;
-    const objectId = await this.mongoClientService.insertDocument(this.collectionName, { name, age, role });
-    return new User(objectId, name, age, role);
+    const objectId = await this.mongoClientService.insertDocument(this.collectionName, user);
+    return { objectId, ...user };
   };
 
   updateUser = async (user) => {

@@ -6,8 +6,6 @@ import Roles from '../models/roles.js';
 class AuthService {
   constructor() {
     this.userService = new UserService();
-    this.saltRounds = process.env.SALT_ROUNDS || 50;
-    console.log(this.saltRounds);
   }
 
   registerUser = async (user) => {
@@ -23,12 +21,11 @@ class AuthService {
       throw new Error(`AuthService: Password must 8-20 characters long.`);
     }
 
-    const hash = await this.#hashPassword(password);
+    const hash = this.#hashPassword(password);
 
-    const user = await this.userService.createUser({ email, name, hash, role });
+    const createdUser = await this.userService.createUser({ email, name, hash, role });
 
-    const token = this.#generateJwt(user);
-    console.log(token);
+    const token = this.#generateJwt(createdUser);
 
     return {
       success: true,
@@ -60,7 +57,13 @@ class AuthService {
 
   #generateJwt = (user) => {
     const jwtSecretKey = process.env.JWT_SECRET_KEY;
-    console.log(jwtSecretKey)
+
+    const options = {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+      algorithm: process.env.JWT_ALGORITHM,
+      subject: process.env.JWT_ISSUER,
+      issuer: process.env.JWT_AUDIENCE,
+    };
 
     if (!jwtSecretKey) {
       throw new Error("AuthService: No data to generate token");
@@ -71,22 +74,13 @@ class AuthService {
       userId: user._id,
     };
 
-    const token = jsonwebtoken.sign(data, jwtSecretKey, {
-      expiresIn: '1h',
-      algorithm: 'HS256',
-      subject: 'Node Try',
-      issuer: 'Node Try',
-    });
+    const token = jsonwebtoken.sign(data, jwtSecretKey, options);
 
     return token;
   };
 
-  #hashPassword = async (password) => {
-    const salt = await bcrypt.genSalt(this.saltRounds);
-    console.log(salt);
-    const hash = await bcrypt.hash(password, salt);
-    console.log(hash);
-    return hash;
+  #hashPassword = (password) => {
+    return bcrypt.hashSync(password, 15);
   };
 
   #verifyPassword = async (password, hash) => {

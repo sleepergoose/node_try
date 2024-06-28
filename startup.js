@@ -1,11 +1,16 @@
+
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({
+  path: path.resolve('.env'),
+});
+
 import express from 'express';
 import userRoutes from './src/routes/userRoutes.js';
 import productRoutes from './src/routes/productRoutes.js';
 import authRouter from './src/routes/authRoutes.js';
 import APP_VARS from './src/constants/environment.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const app = express();
 
