@@ -1,5 +1,4 @@
 import MongoClientService from './mongodb.service.js';
-import User from '../models/user.mjs';
 
 class UserService {
   constructor() {

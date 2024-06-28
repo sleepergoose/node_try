@@ -41,10 +41,10 @@ class MongoClientService {
       let documentWithoutId;
 
       if (document?._id) {
-        const { _id, ...rest } = document;
+        const { _id, ...rest } = document; // eslint-disable-line no-unused-vars
         documentWithoutId = rest;
       } else {
-        const { id, ...rest } = document;
+        const { id, ...rest } = document; // eslint-disable-line no-unused-vars
         documentWithoutId = rest;
       }
 

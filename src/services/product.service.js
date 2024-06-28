@@ -9,7 +9,7 @@ class ProductService {
 
   getProductById = async(id) => {
     if (!id) {
-      throw new Error(`Product Controller: product id cannot be null or undefined.`);
+      throw new Error('Product Controller: product id cannot be null or undefined.');
     }
 
     const result = await this.mongoClientService.getDocumentById(this.collectionName, id);
@@ -21,12 +21,12 @@ class ProductService {
     const { name, price, manufacturer, photoUrl } = product;
 
     if (!(name && price && manufacturer)) {
-      throw new Error(`Product Controller: there are no required product's params.`);
+      throw new Error('Product Controller: there are no required product\'s params.');
     }
 
     const objectId = await this.mongoClientService.insertDocument(this.collectionName, product);
 
-    return new Product(objectId, name, price, manufacturer, photoUrl)
+    return new Product(objectId, name, price, manufacturer, photoUrl);
   };
 
   updateProduct = async (product) => {

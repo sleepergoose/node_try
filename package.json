@@ -6,12 +6,17 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon startup.js"
+    "start": "nodemon startup.js",
+    "lint": "pnpm eslint",
+    "lint:fix": "pnpm eslint --fix"
   },
   "keywords": [],
   "author": "sleepergoose",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.6.0",
+    "eslint": "^9.6.0",
+    "globals": "^15.6.0",
     "nodemon": "^3.1.4"
   },
   "dependencies": {

@@ -14,11 +14,11 @@ class AuthService {
     const role = user.role ?? Roles.USER;
 
     if (!(email && name && name.length > 3 && password)) {
-      throw new Error(`AuthService: Invalid credentials provided.`);
+      throw new Error('AuthService: Invalid credentials provided.');
     }
 
     if (password.length < 8 || password.length > 20) {
-      throw new Error(`AuthService: Password must 8-20 characters long.`);
+      throw new Error('AuthService: Password must 8-20 characters long.');
     }
 
     const hash = this.#hashPassword(password);
@@ -30,7 +30,7 @@ class AuthService {
     return {
       success: true,
       token: token,
-    };;
+    };
   };
 
   login = async (email, password) => {
@@ -66,7 +66,7 @@ class AuthService {
     };
 
     if (!jwtSecretKey) {
-      throw new Error("AuthService: No data to generate token");
+      throw new Error('AuthService: No data to generate token');
     }
 
     const data = {
