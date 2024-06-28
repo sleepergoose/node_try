@@ -15,6 +15,41 @@ I am considering either the Mongoose or the MongoDB Node Driver. Most likely I w
 1. `pnpm install mongodb --save`
 2. 
 
+### MongoDB Validation
+
+See [Modify Schema Validation](https://www.mongodb.com/docs/manual/core/schema-validation/update-schema-validation/)
+
+```js
+db.createCollection("users", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "hash", "role", "email"],
+      properties: {
+        name: {
+          bsonType: "string",
+          description:
+            "Must be a string from 3 to 64 characters long and is required",
+        },
+        hash: {
+          bsonType: "string",
+          description: "must be a string, and is required",
+        },
+        email: {
+          bsonType: "string",
+          description: "must have the email format, and is required",
+        },
+        role: {
+          enum: ['user', 'admin'],
+          description: "Must be either user or admin, and is required",
+        },
+      },
+    },
+  },
+});
+
+```
+
 ### MongoDB With Docker
 
 In the CMD or Terminal:
@@ -27,6 +62,7 @@ version: '3'
 services:
   mongo:
     container_name: MongoDbServer
+    restart: unless-stopped
     image: mongo:latest
     env_file: .env
     environment:
@@ -41,3 +77,11 @@ services:
 
 4. Create a `.env` file in the same directory with the `docker-compose.yaml` file using the following command: `echo MONGODB_HOST_DATA=[root_path]/mongodb > .env`.
 5. Execute `docker compose up --detach --force-recreate` or simply `docker-compose up -d` to start the MongoDB server with the provided parameters.
+
+## JWT
+
+To generate a secret key:
+
+```shell
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" 
+```

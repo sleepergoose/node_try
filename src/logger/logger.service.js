@@ -7,7 +7,7 @@ class Logger {
   logger = (level, message) => {
     const log = {
       level: level,
-      timestamp: Date().toJSON(),
+      timestamp: new Date().toISOString(),
       filename: this.filename,
       msg: message
     };
@@ -35,14 +35,7 @@ class Logger {
   };
 
   static pringLog = (message) => {
-    const log = {
-      level: 'info',
-      timestamp: Date().toJSON(),
-      filename: this.filename,
-      msg: message
-    };
-
-    console.info(log);
+    console.info(`${new Date().toISOString()}: ${message}`);
   };
 }
 

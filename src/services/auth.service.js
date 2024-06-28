@@ -14,11 +14,17 @@ class AuthService {
     const role = user.role ?? Roles.USER;
 
     if (!(email && name && name.length > 3 && password)) {
-      throw new Error('AuthService: Invalid credentials provided.');
+      throw new Error('Invalid credentials provided.');
     }
 
     if (password.length < 8 || password.length > 20) {
-      throw new Error('AuthService: Password must 8-20 characters long.');
+      throw new Error('Password must 8-20 characters long.');
+    }
+
+    const userWithEmail = this.userService.getUserByEmail(email);
+
+    if (userWithEmail) {
+      throw new Error('User with such an email already exists');
     }
 
     const hash = this.#hashPassword(password);
@@ -37,7 +43,7 @@ class AuthService {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
-      throw new Error(`AuthService: there is no user with email '${email}'`);
+      throw new Error(`There is no user with email '${email}'`);
     }
 
     if (!this.#verifyPassword(password, user.hash)) {
@@ -66,15 +72,16 @@ class AuthService {
     };
 
     if (!jwtSecretKey) {
-      throw new Error('AuthService: No data to generate token');
+      throw new Error('No data to generate token');
     }
 
-    const data = {
+    const claims = {
       time: Date(),
+      userRole: user.role,
       userId: user._id,
     };
 
-    const token = jsonwebtoken.sign(data, jwtSecretKey, options);
+    const token = jsonwebtoken.sign(claims, jwtSecretKey, options);
 
     return token;
   };
