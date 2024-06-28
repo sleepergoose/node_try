@@ -1,9 +1,11 @@
 import { MongoClient, ObjectId } from 'mongodb';
 import environment from '../constants/environment.js';
+import Logger from '../logger/logger.service.js';
 
 class MongoClientService {
   constructor() {
     this.client = new MongoClient(environment.MONGODB_CONNECTION_STRING);
+    this.logger = new Logger(import.meta.filename);
   }
 
   insertDocument = async (collectionName, document) => {
@@ -19,7 +21,7 @@ class MongoClientService {
 
       return result.insertedId;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
@@ -60,7 +62,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
@@ -84,7 +86,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
@@ -108,7 +110,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
@@ -132,7 +134,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
@@ -160,7 +162,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
