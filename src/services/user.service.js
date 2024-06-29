@@ -1,5 +1,5 @@
 import MongoClientService from './mongodb.service.js';
-
+import NodeError from '../models/NodeError.js';
 class UserService {
   constructor() {
     this.collectionName = 'users';
@@ -18,7 +18,7 @@ class UserService {
 
   deleteUser = async (id) => {
     if (!id) {
-      throw new Error('User Service: User id cannot be null or undefined.');
+      throw new NodeError(400, 'User Service: User id cannot be null or undefined.');
     }
 
     return await this.mongoClientService.deleteDocumentById(this.collectionName, id);
@@ -26,7 +26,7 @@ class UserService {
 
   getUserById = async (id) => {
     if (!id) {
-      throw new Error('User Service: User id cannot be null or undefined.');
+      throw new NodeError(400, 'User Service: User id cannot be null or undefined.');
     }
 
     return await this.mongoClientService.getDocumentById(this.collectionName, id);
@@ -34,7 +34,7 @@ class UserService {
 
   getUserByEmail = async (email) => {
     if (!email) {
-      throw new Error('User Service: User email cannot be null or undefined.');
+      throw new NodeError(400, 'User Service: User email cannot be null or undefined.');
     }
 
     return await this.mongoClientService.getDocumentByEmail(this.collectionName, email);
@@ -42,7 +42,7 @@ class UserService {
 
   searchUser = async (filter) => {
     if (!filter) {
-      throw new Error('User Service: Filter cannot be null or undefined.');
+      throw new NodeError(400, 'User Service: Filter cannot be null or undefined.');
     }
 
     return await this.mongoClientService.searchDocument(this.collectionName, filter);

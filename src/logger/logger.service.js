@@ -4,7 +4,7 @@ class Logger {
     this.filename = filename;
   }
 
-  logger = (level, message) => {
+  log = (level, message) => {
     const log = {
       level: level,
       timestamp: new Date().toISOString(),
@@ -36,6 +36,16 @@ class Logger {
 
   static pringLog = (message) => {
     console.info(`${new Date().toISOString()}: ${message}`);
+  };
+
+  static pringGlobalLog = (error) => {
+    const log = {
+      level: 'Error Handler',
+      timestamp: new Date().toISOString(),
+      msg: error?.message
+    };
+
+    console.error(log);
   };
 }
 
