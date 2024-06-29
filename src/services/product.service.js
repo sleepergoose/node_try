@@ -1,5 +1,6 @@
 import MongoClientService from './mongodb.service.js';
 import Product from '../models/product.js';
+import NodeError from '../models/NodeError.js';
 
 class ProductService {
   constructor() {
@@ -9,7 +10,7 @@ class ProductService {
 
   getProductById = async(id) => {
     if (!id) {
-      throw new Error('Product Controller: product id cannot be null or undefined.');
+      throw new NodeError(400, 'Product Controller: product id cannot be null or undefined.');
     }
 
     const result = await this.mongoClientService.getDocumentById(this.collectionName, id);
@@ -21,7 +22,7 @@ class ProductService {
     const { name, price, manufacturer, photoUrl } = product;
 
     if (!(name && price && manufacturer)) {
-      throw new Error('Product Controller: there are no required product\'s params.');
+      throw new NodeError(400, 'Product Controller: there are no required product\'s params.');
     }
 
     const objectId = await this.mongoClientService.insertDocument(this.collectionName, product);
@@ -36,7 +37,7 @@ class ProductService {
 
   deleteProduct = async (id) => {
     if (!id) {
-      throw new Error('Product Service: User id cannot be null or undefined.');
+      throw new NodeError(400, 'Product Service: User id cannot be null or undefined.');
     }
 
     return await this.mongoClientService.deleteDocumentById(this.collectionName, id);
@@ -44,7 +45,7 @@ class ProductService {
 
   searchProducts = async (filter) => {
     if (!filter) {
-      throw new Error('Product Service: Filter cannot be null or undefined.');
+      throw new NodeError(400, 'Product Service: Filter cannot be null or undefined.');
     }
 
     return await this.mongoClientService.searchDocument(this.collectionName, filter);

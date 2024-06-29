@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import UserService from './user.service.js';
 import Roles from '../models/roles.js';
+import NodeError from '../models/NodeError.js';
 
 class AuthService {
   constructor() {
@@ -14,21 +15,21 @@ class AuthService {
     const role = user.role ?? Roles.USER;
 
     if (!(email && name && name.length > 3 && password)) {
-      throw new Error('Invalid credentials provided.');
+      throw new NodeError(400, 'Invalid credentials provided.');
     }
 
     if (password.length < 8 || password.length > 20) {
-      throw new Error('Password must 8-20 characters long.');
+      throw new NodeError(400, 'Password must 8-20 characters long.');
     }
 
-    const userWithEmail = this.userService.getUserByEmail(email);
+    const userWithEmail = await this.userService.getUserByEmail(email);
 
     if (userWithEmail) {
-      throw new Error('User with such an email already exists');
+      throw new NodeError(400, 'User with such an email already exists');
     }
 
     const hash = this.#hashPassword(password);
-
+  
     const createdUser = await this.userService.createUser({ email, name, hash, role });
 
     const token = this.#generateJwt(createdUser);
@@ -43,7 +44,7 @@ class AuthService {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
-      throw new Error(`There is no user with email '${email}'`);
+      throw new NodeError(400, `There is no user with email '${email}'`);
     }
 
     if (!this.#verifyPassword(password, user.hash)) {
@@ -72,7 +73,7 @@ class AuthService {
     };
 
     if (!jwtSecretKey) {
-      throw new Error('No data to generate token');
+      throw new NodeError(500, 'No data to generate token');
     }
 
     const claims = {
@@ -87,13 +88,12 @@ class AuthService {
   };
 
   #hashPassword = (password) => {
-    return bcrypt.hashSync(password, 15);
+    return bcrypt.hashSync(password, 13);
   };
 
   #verifyPassword = async (password, hash) => {
     return await bcrypt.compare(password, hash);
   };
 }
-
 
 export default AuthService;

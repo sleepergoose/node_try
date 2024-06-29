@@ -12,6 +12,7 @@ import productRoutes from './src/routes/productRoutes.js';
 import authRouter from './src/routes/authRoutes.js';
 import APP_VARS from './src/constants/environment.js';
 import Logger from './src/logger/logger.service.js';
+import errorHandler from './src/middleware/errorHandler.js';
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use(express.json());
 app.use('/auth', authRouter);
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
+
+app.use(errorHandler);
 
 app.listen(APP_VARS.APP_PORT, APP_VARS.APP_HOSTNAME, () => {
   Logger.pringLog(`The server is running on the ${APP_VARS.APP_HOSTNAME}:${APP_VARS.APP_PORT}`);
