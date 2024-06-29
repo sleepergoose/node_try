@@ -1,4 +1,5 @@
 import jsonwebtoken from 'jsonwebtoken';
+import User from '../models/user.js';
 
 const authMiddleware = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -19,6 +20,8 @@ const authMiddleware = (req, res, next) => {
 
     const decoded = jsonwebtoken.verify(token, secretKey, options);
     req.userId = decoded.userId;
+
+    User.setCurrentUser(decoded.userId, decoded.userRole);
 
     next();
   } catch {
