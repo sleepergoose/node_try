@@ -1,4 +1,4 @@
-import NodeError from '../models/NodeError.js';
+import NodeError from '../models/node-error.js';
 import Logger from '../logger/logger.service.js';
 
 const errorHandler = (err, req, res, next) => {

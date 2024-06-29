@@ -1,6 +1,6 @@
 import MongoClientService from './mongodb.service.js';
 import Product from '../models/product.js';
-import NodeError from '../models/NodeError.js';
+import NodeError from '../models/node-error.js';
 
 class ProductService {
   constructor() {

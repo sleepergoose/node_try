@@ -7,12 +7,12 @@ dotenv.config({
 });
 
 import express from 'express';
-import userRoutes from './src/routes/userRoutes.js';
-import productRoutes from './src/routes/productRoutes.js';
-import authRouter from './src/routes/authRoutes.js';
+import userRoutes from './src/routes/user.routes.js';
+import productRoutes from './src/routes/product.routes.js';
+import authRouter from './src/routes/auth.routes.js';
 import APP_VARS from './src/constants/environment.js';
 import Logger from './src/logger/logger.service.js';
-import errorHandler from './src/middleware/errorHandler.js';
+import errorHandler from './src/middleware/error.handler.js';
 
 const app = express();
 

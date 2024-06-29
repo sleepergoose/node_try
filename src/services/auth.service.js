@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import UserService from './user.service.js';
 import Roles from '../models/roles.js';
-import NodeError from '../models/NodeError.js';
+import NodeError from '../models/node-error.js';
 
 class AuthService {
   constructor() {

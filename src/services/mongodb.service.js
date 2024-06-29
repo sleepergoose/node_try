@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from 'mongodb';
 import environment from '../constants/environment.js';
 import Logger from '../logger/logger.service.js';
-import NodeError from '../models/NodeError.js';
+import NodeError from '../models/node-error.js';
 
 class MongoClientService {
   constructor() {
