@@ -1,9 +1,11 @@
 import { MongoClient, ObjectId } from 'mongodb';
 import environment from '../constants/environment.js';
+import Logger from '../logger/logger.service.js';
 
 class MongoClientService {
   constructor() {
     this.client = new MongoClient(environment.MONGODB_CONNECTION_STRING);
+    this.logger = new Logger(import.meta.filename);
   }
 
   insertDocument = async (collectionName, document) => {
@@ -19,7 +21,7 @@ class MongoClientService {
 
       return result.insertedId;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
@@ -41,10 +43,10 @@ class MongoClientService {
       let documentWithoutId;
 
       if (document?._id) {
-        const { _id, ...rest } = document;
+        const { _id, ...rest } = document; // eslint-disable-line no-unused-vars
         documentWithoutId = rest;
       } else {
-        const { id, ...rest } = document;
+        const { id, ...rest } = document; // eslint-disable-line no-unused-vars
         documentWithoutId = rest;
       }
 
@@ -60,7 +62,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
@@ -84,7 +86,31 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
+      this.client.close();
+    }
+  };
+
+  getDocumentByEmail = async (collectionName, email) => {
+    if (!email) {
+      throw new Error('MongoDB: the email param cannot be null or empty.');
+    }
+
+    if (!collectionName) {
+      throw new Error('MongoDB: the callection name param cannot be null or empty.');
+    }
+
+    try {
+      await this.client.connect();
+
+      const filter = { email: email };
+      const result = await this.client.db(environment.DB_NAME).collection(collectionName).findOne(filter);
+
+      this.client.close();
+
+      return result;
+    } catch (error) {
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
@@ -108,7 +134,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };
@@ -136,7 +162,7 @@ class MongoClientService {
 
       return result;
     } catch (error) {
-      console.log(`ERROR, MONGO SERVICE: ${error?.message}`);
+      this.logger ('error', error?.message);
       this.client.close();
     }
   };

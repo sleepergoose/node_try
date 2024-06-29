@@ -1,5 +1,4 @@
 import MongoClientService from './mongodb.service.js';
-import User from '../models/user.mjs';
 
 class UserService {
   constructor() {
@@ -8,9 +7,8 @@ class UserService {
   }
 
   createUser = async (user) => {
-    const { name, age, role } = user;
-    const objectId = await this.mongoClientService.insertDocument(this.collectionName, { name, age, role });
-    return new User(objectId, name, age, role);
+    const objectId = await this.mongoClientService.insertDocument(this.collectionName, user);
+    return { objectId, ...user };
   };
 
   updateUser = async (user) => {
@@ -32,6 +30,14 @@ class UserService {
     }
 
     return await this.mongoClientService.getDocumentById(this.collectionName, id);
+  };
+
+  getUserByEmail = async (email) => {
+    if (!email) {
+      throw new Error('User Service: User email cannot be null or undefined.');
+    }
+
+    return await this.mongoClientService.getDocumentByEmail(this.collectionName, email);
   };
 
   searchUser = async (filter) => {
