@@ -2,18 +2,19 @@
 
 This repository is supposed to be for hands-on learning of `NodeJS` and `React` and `MongoDB`
 
-## Package Manager
-
 The `pnpm` package manager is used in the project.
+<br/><br/>
 
 ## MongoDB 
 
 I am considering either the Mongoose or the MongoDB Node Driver. Most likely I will choose the MongoDB Node Driver due to its performance and complexity. But the Mongoose is also worth trying of course :)
 
-### MongoDB Node Driver
+To install the MongoDB Node Driver execute the following command:
 
-1. `pnpm install mongodb --save`
-2. 
+```shell
+pnpm install mongodb --save
+```
+
 
 ### MongoDB Validation
 
@@ -77,11 +78,12 @@ services:
 
 4. Create a `.env` file in the same directory with the `docker-compose.yaml` file using the following command: `echo MONGODB_HOST_DATA=[root_path]/mongodb > .env`.
 5. Execute `docker compose up --detach --force-recreate` or simply `docker-compose up -d` to start the MongoDB server with the provided parameters.
+<br/><br/>
 
 ## NodeJS Docker 
 
 Run a command: 
-```yaml
+```shell
 docker build -t node-try-df -f ./docker/Dockerfile.NodeBackend .
 docker run -p 3000:3000 node-try-df
 docker network create my-docker-network

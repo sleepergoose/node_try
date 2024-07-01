@@ -3,6 +3,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import UserService from './user.service.js';
 import Roles from '../models/roles.js';
 import NodeError from '../models/node-error.js';
+import APP_VARS from '../constants/environment.js';
 
 class AuthService {
   constructor() {
@@ -63,13 +64,13 @@ class AuthService {
   };
 
   #generateJwt = (user) => {
-    const jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const jwtSecretKey = APP_VARS.JWT_SECRET_KEY;
 
     const options = {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-      algorithm: process.env.JWT_ALGORITHM,
-      subject: process.env.JWT_ISSUER,
-      issuer: process.env.JWT_AUDIENCE,
+      expiresIn: APP_VARS.JWT_EXPIRES_IN,
+      algorithm: APP_VARS.JWT_ALGORITHM,
+      subject: APP_VARS.JWT_ISSUER,
+      issuer: APP_VARS.JWT_AUDIENCE,
     };
 
     if (!jwtSecretKey) {
