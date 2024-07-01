@@ -78,6 +78,17 @@ services:
 4. Create a `.env` file in the same directory with the `docker-compose.yaml` file using the following command: `echo MONGODB_HOST_DATA=[root_path]/mongodb > .env`.
 5. Execute `docker compose up --detach --force-recreate` or simply `docker-compose up -d` to start the MongoDB server with the provided parameters.
 
+## NodeJS Docker 
+
+Run a command: 
+```yaml
+docker build -t node-try-df -f ./docker/Dockerfile.NodeBackend .
+docker run -p 3000:3000 node-try-df
+docker network create my-docker-network
+docker run --network my-docker-network --name MongoDbServer -d mongo
+docker run --network my-docker-network -p 3000:3000 --name NodeServer -d node-try-df
+```
+
 ## JWT
 
 To generate a secret key:
