@@ -1,5 +1,6 @@
 import MongoClientService from './mongodb.service.js';
 import NodeError from '../models/node-error.js';
+
 class UserService {
   constructor() {
     this.collectionName = 'users';
