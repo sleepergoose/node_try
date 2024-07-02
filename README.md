@@ -59,7 +59,6 @@ In the CMD or Terminal:
 3. Create a `docker-compose.yaml` file in your project directory with the following content:
 
 ```yaml
-version: '3'
 services:
   mongo:
     container_name: MongoDbServer
@@ -97,4 +96,20 @@ To generate a secret key:
 
 ```shell
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" 
+```
+
+## Environment Variables
+
+1. Create an `.env` file in the root project directory
+2. Add it to the `.gitignore` file
+3. Fill in the file with the following variables:
+
+```js
+JWT_SECRET_KEY=""
+JWT_EXPIRES_IN="1h"
+JWT_ALGORITHM="HS256"
+JWT_ISSUER=""
+JWT_AUDIENCE=""
+MONGODB_HOST_DATA="<Path to the volume on the host>"
+MONGODB_CONNECTION_STRING=""
 ```
