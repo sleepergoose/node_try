@@ -2,18 +2,19 @@
 
 This repository is supposed to be for hands-on learning of `NodeJS` and `React` and `MongoDB`
 
-## Package Manager
-
 The `pnpm` package manager is used in the project.
+<br/><br/>
 
 ## MongoDB 
 
 I am considering either the Mongoose or the MongoDB Node Driver. Most likely I will choose the MongoDB Node Driver due to its performance and complexity. But the Mongoose is also worth trying of course :)
 
-### MongoDB Node Driver
+To install the MongoDB Node Driver execute the following command:
 
-1. `pnpm install mongodb --save`
-2. 
+```shell
+pnpm install mongodb --save
+```
+
 
 ### MongoDB Validation
 
@@ -58,7 +59,6 @@ In the CMD or Terminal:
 3. Create a `docker-compose.yaml` file in your project directory with the following content:
 
 ```yaml
-version: '3'
 services:
   mongo:
     container_name: MongoDbServer
@@ -77,6 +77,18 @@ services:
 
 4. Create a `.env` file in the same directory with the `docker-compose.yaml` file using the following command: `echo MONGODB_HOST_DATA=[root_path]/mongodb > .env`.
 5. Execute `docker compose up --detach --force-recreate` or simply `docker-compose up -d` to start the MongoDB server with the provided parameters.
+<br/><br/>
+
+## NodeJS Docker 
+
+Run a command: 
+```shell
+docker build -t node-try-df -f ./docker/Dockerfile.NodeBackend .
+docker run -p 3000:3000 node-try-df
+docker network create my-docker-network
+docker run --network my-docker-network --name MongoDbServer -d mongo
+docker run --network my-docker-network -p 3000:3000 --name NodeServer -d node-try-df
+```
 
 ## JWT
 
@@ -84,4 +96,20 @@ To generate a secret key:
 
 ```shell
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" 
+```
+
+## Environment Variables
+
+1. Create an `.env` file in the root project directory
+2. Add it to the `.gitignore` file
+3. Fill in the file with the following variables:
+
+```js
+JWT_SECRET_KEY=""
+JWT_EXPIRES_IN="1h"
+JWT_ALGORITHM="HS256"
+JWT_ISSUER=""
+JWT_AUDIENCE=""
+MONGODB_HOST_DATA="<Path to the volume on the host>"
+MONGODB_CONNECTION_STRING=""
 ```

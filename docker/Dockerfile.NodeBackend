@@ -1,0 +1,27 @@
+FROM node:lts-slim
+
+ARG PORT=5000
+
+RUN mkdir -p /opt/app
+
+WORKDIR /opt/app
+
+RUN npm install -g pnpm
+
+COPY ../package.json ../pnpm-lock.yaml  ./
+
+RUN pnpm install --frozen-lockfile
+
+COPY ../src/ ./src/
+
+COPY ../startup.js ./
+
+ENV MONGODB_CONNECTION_STRING='mongodb://%3Cusername%3E:%3Cpassword%3E@MongoDbServer:27017/?authSource=admin&tls=false'
+
+ENV APP_HOSTNAME='0.0.0.0'
+
+ENV APP_PORT=$PORT
+
+EXPOSE $PORT
+
+CMD [ "pnpm", "start"]

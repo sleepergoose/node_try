@@ -1,0 +1,38 @@
+
+services:
+  mongo:
+    container_name: MongoDbServer
+    restart: unless-stopped
+    image: mongo:latest
+    env_file: ".env"
+    networks:
+      - node-try-network
+    environment:
+      - AUTH=yes
+      - MONGO_INITDB_ROOT_USERNAME=<username>
+      - MONGO_INITDB_ROOT_PASSWORD=<password>
+    volumes:
+      - ${MONGODB_HOST_DATA}/db:/data/db
+    ports:
+      - "27017:27017"
+
+  node:
+    container_name: NodeBackend
+    restart: always
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile.NodeBackend
+    env_file: ".env"
+    networks:
+      - node-try-network
+    depends_on: 
+      - mongo
+    ports:
+      - "5000:5000"
+
+volumes:
+  mongo-db:
+
+networks:
+  node-try-network:
+    driver: bridge

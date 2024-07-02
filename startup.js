@@ -1,11 +1,3 @@
-
-import dotenv from 'dotenv';
-import path from 'path';
-
-dotenv.config({
-  path: path.resolve('.env'),
-});
-
 import express from 'express';
 import userRoutes from './src/routes/user.routes.js';
 import productRoutes from './src/routes/product.routes.js';
