@@ -30,7 +30,10 @@ class UserService {
       throw new NodeError(400, 'User Service: User id cannot be null or undefined.');
     }
 
-    return await this.mongoClientService.getDocumentById(this.collectionName, id);
+    const user = await this.mongoClientService.getDocumentById(this.collectionName, id);
+    delete user.hash;
+
+    return user;
   };
 
   getUserByEmail = async (email) => {
@@ -46,7 +49,13 @@ class UserService {
       throw new NodeError(400, 'User Service: Filter cannot be null or undefined.');
     }
 
-    return await this.mongoClientService.searchDocument(this.collectionName, filter);
+    const users = await this.mongoClientService.searchDocument(this.collectionName, filter);
+
+    users.forEach(user => {
+      delete user.hash;
+    });
+
+    return users;
   };
 }
 
