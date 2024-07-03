@@ -5,6 +5,7 @@ import authRouter from './src/routes/auth.routes.js';
 import APP_VARS from './src/constants/environment.js';
 import Logger from './src/logger/logger.service.js';
 import errorHandler from './src/middleware/error.handler.js';
+import requestLogMiddleware from './src/middleware/request-log.middleware.js';
 import cors from 'cors';
 
 const app = express();
@@ -16,8 +17,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
+app.use(requestLogMiddleware);
+
 app.use('/auth', authRouter);
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
