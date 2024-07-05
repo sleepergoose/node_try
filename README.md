@@ -105,11 +105,27 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 3. Fill in the file with the following variables:
 
 ```js
-JWT_SECRET_KEY=""
-JWT_EXPIRES_IN="1h"
+JWT_ACCESS_SECRET_KEY=""
+JWT_ACCESS_EXPIRES_IN="15m"
+JWT_REFRESH_SECRET_KEY=""
+JWT_REFRESH_EXPIRES_IN="8h"
 JWT_ALGORITHM="HS256"
 JWT_ISSUER=""
 JWT_AUDIENCE=""
 MONGODB_HOST_DATA="<Path to the volume on the host>"
 MONGODB_CONNECTION_STRING=""
+```
+
+
+### Packages
+
+The list of necessary packages:
+
+```shell
+pnpm install express
+pnpm install cors
+pnpm install jsonwebtoken
+pnpm install bcrypt
+pnpm install cookie-parser
+pnpm install mongodb
 ```

@@ -30,14 +30,16 @@ class AuthService {
     }
 
     const hash = this.#hashPassword(password);
-  
+
     const createdUser = await this.userService.createUser({ email, name, hash, role });
 
-    const token = this.#generateJwt(createdUser);
+    const accessToken = AuthService.generateAccessJwt(createdUser);
+    const refreshToken = this.#generateRefreshJwt(createdUser);
 
     return {
       success: true,
-      token: token,
+      accessToken: accessToken,
+      refreshToken: refreshToken
     };
   };
 
@@ -55,19 +57,66 @@ class AuthService {
       };
     }
 
-    const token = this.#generateJwt(user);
+    const accessToken = AuthService.generateAccessJwt(user);
+    const refreshToken = this.#generateRefreshJwt(user);
 
-    return   {
+    return {
       success: true,
-      token: token,
+      accessToken: accessToken,
+      refreshToken: refreshToken
     };
   };
 
-  #generateJwt = (user) => {
-    const jwtSecretKey = APP_VARS.JWT_SECRET_KEY;
+  refreshAccessToken = async (refreshToken) => {
+    const secretKey = APP_VARS.JWT_REFRESH_SECRET_KEY;
 
     const options = {
-      expiresIn: APP_VARS.JWT_EXPIRES_IN,
+      expiresIn: APP_VARS.JWT_REFRESH_EXPIRES_IN,
+      algorithm: APP_VARS.JWT_ALGORITHM,
+      subject: APP_VARS.JWT_ISSUER,
+      issuer: APP_VARS.JWT_AUDIENCE,
+    };
+
+    try {
+      const decoded = jsonwebtoken.verify(refreshToken, secretKey, options);
+      const accessToken = AuthService.generateAccessJwt({ _id: decoded.userId, role: decoded.userRole });
+
+      return { accessToken };
+    } catch {
+      throw new NodeError(401, 'Invalid refresh token.');
+    }
+  };
+
+  static generateAccessJwt = (user) => {
+    const jwtSecretKey = APP_VARS.JWT_ACCESS_SECRET_KEY;
+
+    const options = {
+      expiresIn: APP_VARS.JWT_ACCESS_EXPIRES_IN,
+      algorithm: APP_VARS.JWT_ALGORITHM,
+      subject: APP_VARS.JWT_ISSUER,
+      issuer: APP_VARS.JWT_AUDIENCE,
+    };
+
+    if (!jwtSecretKey) {
+      throw new NodeError(500, 'No data to generate token');
+    }
+
+    const claims = {
+      time: Date(),
+      userRole: user.role,
+      userId: user._id,
+    };
+
+    const token = jsonwebtoken.sign(claims, jwtSecretKey, options);
+
+    return token;
+  };
+
+  #generateRefreshJwt = (user) => {
+    const jwtSecretKey = APP_VARS.JWT_REFRESH_SECRET_KEY;
+
+    const options = {
+      expiresIn: APP_VARS.JWT_REFRESH_EXPIRES_IN,
       algorithm: APP_VARS.JWT_ALGORITHM,
       subject: APP_VARS.JWT_ISSUER,
       issuer: APP_VARS.JWT_AUDIENCE,

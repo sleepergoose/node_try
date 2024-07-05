@@ -7,6 +7,7 @@ import Logger from './src/logger/logger.service.js';
 import errorHandler from './src/middleware/error.handler.js';
 import requestLogMiddleware from './src/middleware/request-log.middleware.js';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -17,6 +18,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.json());
 app.use(requestLogMiddleware);
 
