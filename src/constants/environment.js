@@ -10,6 +10,7 @@ const JWT_AUDIENCE = process.env.JWT_AUDIENCE;
 const JWT_ACCESS_SECRET_KEY = process.env.JWT_ACCESS_SECRET_KEY;
 const JWT_REFRESH_SECRET_KEY = process.env.JWT_REFRESH_SECRET_KEY;
 const NODE_ENV = process.env.NODE_ENV;
+const ORIGIN_URL = process.env.ORIGIN_URL;
 
 export default {
   APP_PORT,
@@ -23,5 +24,6 @@ export default {
   JWT_ACCESS_SECRET_KEY,
   JWT_REFRESH_EXPIRES_IN,
   JWT_REFRESH_SECRET_KEY,
-  NODE_ENV
+  NODE_ENV,
+  ORIGIN_URL,
 };

@@ -12,9 +12,10 @@ import cookieParser from 'cookie-parser';
 const app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: APP_VARS.ORIGIN_URL,
   optionsSuccessStatus: 200,
-  methods: ['GET', 'PUT', 'POST', 'DELETE']
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
