@@ -1,4 +1,3 @@
-import User from '../models/user.js';
 import Roles from '../models/roles.js';
 
 class PermissionService {
@@ -6,11 +5,11 @@ class PermissionService {
 
   }
 
-  isUserAdmin = () => 
-    User.getRole === Roles.ADMIN;
+  isUserAdmin = (context) =>
+    context.userRole === Roles.ADMIN;
 
-  isUserCanRequestUserData = (requesteUserId) => 
-    requesteUserId === User.getUserId() || User.getRole() === Roles.ADMIN;
+  isUserCanRequestUserData = (context, requesteUserId) =>
+    requesteUserId === context.userId() || context.userRole === Roles.ADMIN;
 }
 
 export default PermissionService;

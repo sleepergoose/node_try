@@ -21,7 +21,7 @@ class UserController {
     try {
       const userId = req.params.id;
 
-      if (!this.permissionService.isUserCanRequestUserData(userId)) {
+      if (!this.permissionService.isUserCanRequestUserData(req.locals, userId)) {
         throw new NodeError(403, 'You have no rights to request this data');
       }
 
@@ -31,7 +31,7 @@ class UserController {
       next(error);
     }
   };
-  
+
   createUser = async (req, res, next) => {
     try {
       const user = await this.userService.createUser(req.body);
@@ -40,12 +40,12 @@ class UserController {
       next(error);
     }
   };
-  
+
   updateUser = async (req, res, next) => {
     try {
       const userId = req.body?.id || req.body?._id;
 
-      if (!this.permissionService.isUserCanRequestUserData(userId)) {
+      if (!this.permissionService.isUserCanRequestUserData(req.locals, userId)) {
         throw new NodeError(403, 'You have no rights to request this data');
       }
 
@@ -55,12 +55,12 @@ class UserController {
       next(error);
     }
   };
-  
+
   deleteUser = async (req, res, next) => {
     try {
       const userId = req.params.id;
 
-      if (!this.permissionService.isUserCanRequestUserData(userId)) {
+      if (!this.permissionService.isUserCanRequestUserData(req.locals, userId)) {
         throw new NodeError(403, 'You have no rights to request this data');
       }
 

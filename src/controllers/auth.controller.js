@@ -55,6 +55,11 @@ class AuthController {
     }
   };
 
+  logOut = async (req, res, next) => {
+    res.clearCookie('refreshToken', { httpOnly: true });
+    res.status(204).json({ message: 'Logged out successfully' });
+  };
+
   refreshToken = async (req, res, next) => {
     const refreshToken = req.cookies['refreshToken'];
 

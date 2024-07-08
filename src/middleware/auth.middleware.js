@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken';
-import User from '../models/user.js';
 import APP_VARS from '../constants/environment.js';
 import AuthService from '../services/auth.service.js';
+import Context from '../models/context.js';
 
 const authMiddleware = (req, res, next) => {
   const accessToken = req.header('Authorization')?.replace('Bearer ', '');
@@ -28,7 +28,9 @@ const authMiddleware = (req, res, next) => {
     const decoded = jsonwebtoken.verify(accessToken, secretKey, options);
     req.userId = decoded.userId;
 
-    User.setCurrentUser(decoded.userId, decoded.userRole);
+    const context = new Context(decoded.userId, decoded.userRole);
+
+    req.locals = context;
 
     next();
   } catch {
