@@ -9,6 +9,51 @@ class MongoClientService {
     this.logger = new Logger('mongodb.service');
   }
 
+  getAllDocuments = async (collectionName, limit = 1000) => {
+    try {
+      await this.client.connect();
+      const result = await this.client.db(environment.DB_NAME).collection(collectionName).find().limit(limit);
+
+      await this.client.close();
+
+      return result;
+    } catch (error) {
+      this.logger.log('error', error?.message);
+      await this.client.close();
+    }
+  };
+
+  getPaginatedDocuments = async (collectionName, page, limit) => {
+    if (!collectionName) {
+      throw new NodeError(400, 'MongoDB: the callection name param cannot be null or empty.');
+    }
+
+    try {
+      await this.client.connect();
+
+      const result = await this.client.db(environment.DB_NAME).collection(collectionName).aggregate([
+        {
+          $sort: {
+            price: 1
+          }
+        },
+        {
+          '$skip': (page - 1) * limit
+        },
+        {
+          '$limit': limit
+        },
+      ]).toArray();
+
+      await this.client.close();
+
+      return result;
+    } catch (error) {
+      this.logger.log('error', error?.message);
+      await this.client.close();
+    }
+  };
+
   insertDocument = async (collectionName, document) => {
     if (!collectionName) {
       throw new NodeError(400, 'MongoDB: the callection name param cannot be null or empty.');
@@ -23,7 +68,7 @@ class MongoClientService {
       return result.insertedId;
     } catch (error) {
       this.logger.log('error', error?.message);
-      this.client.close();
+      await this.client.close();
     }
   };
 
@@ -38,9 +83,9 @@ class MongoClientService {
 
     try {
       await this.client.connect();
-  
+
       const filter = { _id: ObjectId.createFromHexString(document._id) ?? ObjectId.createFromHexString(document.id) };
-      
+
       let documentWithoutId;
 
       if (document?._id) {
@@ -51,7 +96,7 @@ class MongoClientService {
         documentWithoutId = rest;
       }
 
-      const newValues = { 
+      const newValues = {
         $set: {
           ...documentWithoutId,
         }
@@ -64,7 +109,7 @@ class MongoClientService {
       return result;
     } catch (error) {
       this.logger.log('error', error?.message);
-      this.client.close();
+      await this.client.close();
     }
   };
 
@@ -88,7 +133,7 @@ class MongoClientService {
       return result;
     } catch (error) {
       this.logger.log('error', error?.message);
-      this.client.close();
+      await this.client.close();
     }
   };
 
@@ -112,7 +157,7 @@ class MongoClientService {
       return result;
     } catch (error) {
       this.logger.log('error', error?.message);
-      this.client.close();
+      await this.client.close();
     }
   };
 
@@ -136,7 +181,7 @@ class MongoClientService {
       return result;
     } catch (error) {
       this.logger.log('error', error?.message);
-      this.client.close();
+      await this.client.close();
     }
   };
 
@@ -164,7 +209,7 @@ class MongoClientService {
       return result;
     } catch (error) {
       this.logger.log('error', error?.message);
-      this.client.close();
+      await this.client.close();
     }
   };
 }

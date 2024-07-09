@@ -8,12 +8,13 @@ const authMiddleware = (req, res, next) => {
   const refreshToken = req.cookies['refreshToken'];
 
   if (!(accessToken || refreshToken)) {
-    return res.status(401).json({ error: 'Access Denied. No token provided.' });
+    res.status(401).json({ error: 'Access Denied. No token provided.' });
+    return;
   }
 
   try {
     if (!accessToken) {
-      res.status(401).json({ error: 'Access denied. No access token provided' });
+      throw new Error('Access denied. No access token provided');
     }
 
     const secretKey = APP_VARS.JWT_ACCESS_SECRET_KEY;
@@ -31,11 +32,11 @@ const authMiddleware = (req, res, next) => {
     const context = new Context(decoded.userId, decoded.userRole);
 
     req.locals = context;
-
     next();
   } catch {
     if (!refreshToken) {
-      return res.status(401).json({ error: 'Access Denied. No refresh token provided.' });
+      res.status(401).json({ error: 'Access Denied. No refresh token provided.' });
+      return;
     }
 
     try {
@@ -51,24 +52,23 @@ const authMiddleware = (req, res, next) => {
       const refreshDecoded = jsonwebtoken.verify(refreshToken, refreshSecretKey, refreshOptions);
       const newAccessToken = AuthService.generateAccessJwt({ _id: refreshDecoded.userId, role: refreshDecoded.userRole });
 
-      res.setHeader('Authorization', newAccessToken);
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: APP_VARS.COOKIE_JWT_REFRESH_EXPIRES_IN, // ms
+      });
 
-      res
-        .cookie('refreshToken', refreshToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 60 * 60 * 24 * 1, // secs * mins * hours * days
-        })
-        .cookie('accessToken', refreshToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: 60 * 60 * 1, // secs * mins * hours * days
-        })
-        .send();
+      res.cookie('accessToken', newAccessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: APP_VARS.COOKIE_JWT_ACCESS_EXPIRES_IN, // ms
+      });
+
+      next();
     } catch {
-      return res.status(401).json({ error: 'Access Denied. Refresh token is invalid.' });
+      res.status(401).json({ error: 'Access Denied. Session timed out, please, log out and log in again.' });
     }
   }
 };

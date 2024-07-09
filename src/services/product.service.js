@@ -8,12 +8,24 @@ class ProductService {
     this.mongoClientService = new MongoClientService();
   }
 
-  getProductById = async(id) => {
+  getProductById = async (id) => {
     if (!id) {
       throw new NodeError(400, 'Product Controller: product id cannot be null or undefined.');
     }
 
     const result = await this.mongoClientService.getDocumentById(this.collectionName, id);
+
+    return result;
+  };
+
+  getAllProducts = async (limit) => {
+    const result = await this.mongoClientService.getAllDocuments(this.collectionName, limit);
+
+    return result;
+  };
+
+  getPaginatedProducts = async (page, limit) => {
+    const result = await this.mongoClientService.getPaginatedDocuments(this.collectionName, page, limit);
 
     return result;
   };

@@ -5,6 +5,8 @@ import ProductController from '../controllers/product.controller.js';
 const productRoutes = express.Router();
 const productController = new ProductController();
 
+productRoutes.get('/paginated', authMiddleware, productController.getPaginatedProducts);
+productRoutes.get('/all/:limit', authMiddleware, productController.getAllProducts);
 productRoutes.get('/:id', authMiddleware, productController.getProductById);
 productRoutes.post('/', authMiddleware, productController.createProduct);
 productRoutes.put('/', authMiddleware, productController.updateProduct);

@@ -114,6 +114,8 @@ JWT_ISSUER=""
 JWT_AUDIENCE=""
 MONGODB_HOST_DATA="<Path to the volume on the host>"
 MONGODB_CONNECTION_STRING=""
+NODE_ENV="development"
+ORIGIN_URL=""
 ```
 
 
