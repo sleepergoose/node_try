@@ -1,5 +1,6 @@
 import NodeError from '../models/node-error.js';
 import AuthService from '../services/auth.service.js';
+import APP_VARS from '../constants/environment.js';
 
 class AuthController {
   constructor() {
@@ -15,14 +16,14 @@ class AuthController {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'strict',
-          maxAge: 60 * 60 * 1,
+          maxAge: APP_VARS.COOKIE_JWT_ACCESS_EXPIRES_IN,
           path: '/',
         })
         .cookie('refreshToken', response.refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'strict',
-          maxAge: 60 * 60 * 24 * 1,
+          maxAge: APP_VARS.COOKIE_JWT_REFRESH_EXPIRES_IN,
           path: '/',
         })
         .status(200).json({
@@ -44,14 +45,14 @@ class AuthController {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'strict',
-          maxAge: 1000 * 60 * 60 * 1, // in ms
+          maxAge: APP_VARS.COOKIE_JWT_ACCESS_EXPIRES_IN, // in ms
           path: '/',
         })
         .cookie('refreshToken', response.refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'strict',
-          maxAge: 1000 * 60 * 60 * 24 * 1, // in ms
+          maxAge: APP_VARS.COOKIE_JWT_REFRESH_EXPIRES_IN, // in ms
           path: '/',
         })
         .status(200).json({
