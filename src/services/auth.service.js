@@ -39,7 +39,8 @@ class AuthService {
     return {
       success: true,
       accessToken: accessToken,
-      refreshToken: refreshToken
+      refreshToken: refreshToken,
+      user: createdUser,
     };
   };
 
@@ -60,10 +61,13 @@ class AuthService {
     const accessToken = AuthService.generateAccessJwt(user);
     const refreshToken = this.#generateRefreshJwt(user);
 
+    delete user.hash;
+
     return {
       success: true,
       accessToken: accessToken,
-      refreshToken: refreshToken
+      refreshToken: refreshToken,
+      user: user,
     };
   };
 

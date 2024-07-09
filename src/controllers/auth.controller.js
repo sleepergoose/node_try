@@ -11,6 +11,13 @@ class AuthController {
       const response = await this.authService.registerUser(req.body);
 
       res
+        .cookie('accessToken', response.accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 60 * 60 * 1,
+          path: '/',
+        })
         .cookie('refreshToken', response.refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
@@ -20,10 +27,7 @@ class AuthController {
         })
         .status(200).json({
           success: true,
-          user: {
-            // add user data after the frontend is ready
-          },
-          accessToken: response.accessToken,
+          user: response.user,
         });
     } catch (error) {
       next(error);
@@ -36,28 +40,35 @@ class AuthController {
       const response = await this.authService.login(email, password);
 
       res
+        .cookie('accessToken', response.accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 1000 * 60 * 60 * 1, // in ms
+          path: '/',
+        })
         .cookie('refreshToken', response.refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'strict',
-          maxAge: 60 * 60 * 24 * 1,
+          maxAge: 1000 * 60 * 60 * 24 * 1, // in ms
           path: '/',
         })
         .status(200).json({
           success: true,
-          user: {
-            // add user data after the frontend is ready
-          },
-          accessToken: response.accessToken,
+          user: response.user,
         });
     } catch (error) {
       next(error);
     }
   };
 
-  logOut = async (req, res, next) => {
+  logOut = (req, res, next) => {
     res.clearCookie('refreshToken', { httpOnly: true });
-    res.status(204).json({ message: 'Logged out successfully' });
+    res.clearCookie('accessToken', { httpOnly: true });
+    res.status(200).json({
+      message: 'Logged out successfully'
+    });
   };
 
   refreshToken = async (req, res, next) => {

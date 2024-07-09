@@ -4,7 +4,7 @@ import AuthService from '../services/auth.service.js';
 import Context from '../models/context.js';
 
 const authMiddleware = (req, res, next) => {
-  const accessToken = req.header('Authorization')?.replace('Bearer ', '');
+  const accessToken = req.cookies['accessToken'];
   const refreshToken = req.cookies['refreshToken'];
 
   if (!(accessToken || refreshToken)) {
@@ -60,7 +60,13 @@ const authMiddleware = (req, res, next) => {
           sameSite: 'strict',
           maxAge: 60 * 60 * 24 * 1, // secs * mins * hours * days
         })
-        .send({ accessToken: newAccessToken });
+        .cookie('accessToken', refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 60 * 60 * 1, // secs * mins * hours * days
+        })
+        .send();
     } catch {
       return res.status(401).json({ error: 'Access Denied. Refresh token is invalid.' });
     }
