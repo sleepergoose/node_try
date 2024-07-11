@@ -27,7 +27,10 @@ class ProductService {
   getPaginatedProducts = async (page, limit) => {
     const result = await this.mongoClientService.getPaginatedDocuments(this.collectionName, page, limit);
 
-    return result;
+    return {
+      count: result.countDocuments,
+      products: result.documents,
+    };
   };
 
   createProduct = async (product) => {
