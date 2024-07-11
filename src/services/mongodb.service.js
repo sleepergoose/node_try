@@ -30,8 +30,9 @@ class MongoClientService {
 
     try {
       await this.client.connect();
+      const countDocuments = await this.client.db(environment.DB_NAME).collection(collectionName).countDocuments();
 
-      const result = await this.client.db(environment.DB_NAME).collection(collectionName).aggregate([
+      const documents = await this.client.db(environment.DB_NAME).collection(collectionName).aggregate([
         {
           $sort: {
             price: 1
@@ -47,7 +48,10 @@ class MongoClientService {
 
       await this.client.close();
 
-      return result;
+      return {
+        countDocuments: countDocuments,
+        documents: documents,
+      };
     } catch (error) {
       this.logger.log('error', error?.message);
       await this.client.close();
