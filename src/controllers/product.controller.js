@@ -28,8 +28,10 @@ class ProductController {
   };
 
   getPaginatedProducts = async (req, res, next) => {
-    const page = +req.query.page || 1;
-    const limit = +req.query.limit || 20;
+    await new Promise(resolve => setTimeout(resolve, 300)); // an artificial delay just to imitate real life
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 20;
 
     try {
       const products = await this.productService.getPaginatedProducts(page, limit);
