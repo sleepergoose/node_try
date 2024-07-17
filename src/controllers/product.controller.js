@@ -1,3 +1,4 @@
+import { sortOptions } from '../constants/sortOptions.js';
 import ProductService from '../services/product.service.js';
 
 class ProductController {
@@ -32,9 +33,12 @@ class ProductController {
 
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
+    const sortOption = sortOptions
+      .map(p => p.value)
+      .includes(req.query.sortOption) ? req.query.sortOption : 'priceUp';
 
     try {
-      const products = await this.productService.getPaginatedProducts(page, limit);
+      const products = await this.productService.getPaginatedProducts(page, limit, sortOption);
 
       res.send(products);
     } catch (error) {

@@ -2,12 +2,19 @@ import { MongoClient, ObjectId } from 'mongodb';
 import environment from '../constants/environment.js';
 import Logger from '../logger/logger.service.js';
 import NodeError from '../models/node-error.js';
+import { sortOptions } from '../constants/sortOptions.js';
 
 class MongoClientService {
   constructor() {
     this.client = new MongoClient(environment.MONGODB_CONNECTION_STRING);
     this.logger = new Logger('mongodb.service');
   }
+
+  #defaultFilter = {
+    $sort: {
+      price: 1
+    }
+  };
 
   getAllDocuments = async (collectionName, limit = 1000) => {
     try {
@@ -23,21 +30,19 @@ class MongoClientService {
     }
   };
 
-  getPaginatedDocuments = async (collectionName, page, limit) => {
+  getPaginatedDocuments = async (collectionName, page, limit, sortOption) => {
     if (!collectionName) {
       throw new NodeError(400, 'MongoDB: the callection name param cannot be null or empty.');
     }
+
+    const filter = sortOptions.find(p => p.value === sortOption)?.filter ?? this.#defaultFilter;
 
     try {
       await this.client.connect();
       const countDocuments = await this.client.db(environment.DB_NAME).collection(collectionName).countDocuments();
 
       const documents = await this.client.db(environment.DB_NAME).collection(collectionName).aggregate([
-        {
-          $sort: {
-            price: 1
-          }
-        },
+        filter,
         {
           '$skip': (page - 1) * limit
         },
