@@ -23,4 +23,12 @@ export const sortOptions = [
       }
     }
   },
+  {
+    value: 'newest',
+    filter: {
+      $sort: {
+        createdAt: -1
+      }
+    }
+  },
 ];

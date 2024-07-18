@@ -65,6 +65,16 @@ class ProductService {
 
     return await this.mongoClientService.searchDocument(this.collectionName, filter);
   };
+
+  getProductTypes = async () => {
+    const typeObjects = await this.mongoClientService.getGroupedDocuments(this.collectionName, {
+      $group: {
+        _id: '$type'
+      }
+    });
+
+    return typeObjects?.map(o => o._id);
+  };
 }
 
 export default ProductService;

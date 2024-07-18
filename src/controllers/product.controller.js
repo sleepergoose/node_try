@@ -83,6 +83,15 @@ class ProductController {
       next(error);
     }
   };
+
+  getProductTypes = async (req, res, next) => {
+    try {
+      const products = await this.productService.getProductTypes();
+      res.send(products);
+    } catch (error) {
+      next(error);
+    }
+  };
 };
 
 export default ProductController;

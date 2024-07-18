@@ -3,6 +3,7 @@ import environment from '../constants/environment.js';
 import Logger from '../logger/logger.service.js';
 import NodeError from '../models/node-error.js';
 import { sortOptions } from '../constants/sortOptions.js';
+import _ from 'lodash';
 
 class MongoClientService {
   constructor() {
@@ -70,6 +71,7 @@ class MongoClientService {
 
     try {
       await this.client.connect();
+      document.createdAt = new Date(_.now());
       const result = await this.client.db(environment.DB_NAME).collection(collectionName).insertOne(document);
 
       await this.client.close();
@@ -211,6 +213,33 @@ class MongoClientService {
         .collection(collectionName)
         .find(filter)
         .limit(limit < 100 ? limit : 100)
+        .toArray();
+
+      await this.client.close();
+
+      return result;
+    } catch (error) {
+      this.logger.log('error', error?.message);
+      await this.client.close();
+    }
+  };
+
+  getGroupedDocuments = async (collectionName, groupEquation) => {
+    if (!groupEquation) {
+      throw new NodeError(400, 'MongoDB: the \'groupEquation\' param cannot be null or undefined.');
+    }
+
+    if (!collectionName) {
+      throw new NodeError(500, 'MongoDB: the callection name param cannot be null or empty.');
+    }
+
+    try {
+      await this.client.connect();
+
+      const result = await this.client
+        .db(environment.DB_NAME)
+        .collection(collectionName)
+        .aggregate([groupEquation])
         .toArray();
 
       await this.client.close();
