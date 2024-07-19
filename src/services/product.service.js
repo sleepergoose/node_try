@@ -75,6 +75,25 @@ class ProductService {
 
     return typeObjects?.map(o => o._id);
   };
+
+  getProductFilterData = async () => {
+    const typeObjects = await this.mongoClientService.getGroupedDocuments(this.collectionName, {
+      $group: {
+        _id: '$type'
+      }
+    });
+
+    const manufacturerObjects = await this.mongoClientService.getGroupedDocuments(this.collectionName, {
+      $group: {
+        _id: '$manufacturer'
+      }
+    });
+
+    return {
+      types: typeObjects?.map(o => o._id),
+      manufacturers: manufacturerObjects?.map(o => o._id),
+    };
+  };
 }
 
 export default ProductService;

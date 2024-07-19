@@ -86,8 +86,17 @@ class ProductController {
 
   getProductTypes = async (req, res, next) => {
     try {
-      const products = await this.productService.getProductTypes();
-      res.send(products);
+      const productTypes = await this.productService.getProductTypes();
+      res.send(productTypes);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getProductFilterData = async (req, res, next) => {
+    try {
+      const filterData = await this.productService.getProductFilterData();
+      res.send(filterData);
     } catch (error) {
       next(error);
     }
