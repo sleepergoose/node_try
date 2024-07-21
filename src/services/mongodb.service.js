@@ -2,20 +2,14 @@ import { MongoClient, ObjectId } from 'mongodb';
 import environment from '../constants/environment.js';
 import Logger from '../logger/logger.service.js';
 import NodeError from '../models/node-error.js';
-import { sortOptions } from '../constants/sortOptions.js';
-import _ from 'lodash';
+import lodash_pkg from 'lodash';
+const { now } = lodash_pkg;
 
 class MongoClientService {
   constructor() {
     this.client = new MongoClient(environment.MONGODB_CONNECTION_STRING);
     this.logger = new Logger('mongodb.service');
   }
-
-  #defaultFilter = {
-    $sort: {
-      price: 1
-    }
-  };
 
   getAllDocuments = async (collectionName, limit = 1000) => {
     try {
@@ -31,26 +25,22 @@ class MongoClientService {
     }
   };
 
-  getPaginatedDocuments = async (collectionName, page, limit, sortOption) => {
+  getPaginatedDocuments = async (collectionName, pipelines, isFiltered = false, countFilter = null) => {
     if (!collectionName) {
       throw new NodeError(400, 'MongoDB: the callection name param cannot be null or empty.');
     }
 
-    const filter = sortOptions.find(p => p.value === sortOption)?.filter ?? this.#defaultFilter;
-
     try {
       await this.client.connect();
-      const countDocuments = await this.client.db(environment.DB_NAME).collection(collectionName).countDocuments();
 
-      const documents = await this.client.db(environment.DB_NAME).collection(collectionName).aggregate([
-        filter,
-        {
-          '$skip': (page - 1) * limit
-        },
-        {
-          '$limit': limit
-        },
-      ]).toArray();
+      const countDocuments = await this.client.db(environment.DB_NAME)
+        .collection(collectionName)
+        .countDocuments(isFiltered ? countFilter : {});
+
+      const documents = await this.client.db(environment.DB_NAME)
+        .collection(collectionName)
+        .aggregate(pipelines)
+        .toArray();
 
       await this.client.close();
 
@@ -71,7 +61,7 @@ class MongoClientService {
 
     try {
       await this.client.connect();
-      document.createdAt = new Date(_.now());
+      document.createdAt = new Date(now());
       const result = await this.client.db(environment.DB_NAME).collection(collectionName).insertOne(document);
 
       await this.client.close();

@@ -37,9 +37,11 @@ class ProductController {
       .map(p => p.value)
       .includes(req.query.sortOption) ? req.query.sortOption : 'priceUp';
 
-    try {
-      const products = await this.productService.getPaginatedProducts(page, limit, sortOption);
+    const type = req.query.type ?? null;
+    const manufacturer = req.query.manufacturer ?? null;
 
+    try {
+      const products = await this.productService.getPaginatedProducts(page, limit, sortOption, type, manufacturer);
       res.send(products);
     } catch (error) {
       next(error);
