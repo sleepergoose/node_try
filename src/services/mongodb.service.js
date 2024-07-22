@@ -186,7 +186,7 @@ class MongoClientService {
     }
   };
 
-  searchDocument = async (collectionName, filter, limit = 10) => {
+  searchDocument = async (collectionName, filter, sortBy = null, sortDirection = 'asc', limit = 10) => {
     if (!filter) {
       throw new NodeError(400, 'MongoDB: the \'filter\' param cannot be null or undefined.');
     }
@@ -195,6 +195,8 @@ class MongoClientService {
       throw new NodeError(500, 'MongoDB: the callection name param cannot be null or empty.');
     }
 
+    sortDirection = sortDirection === 'desc' ? 'desc' : 'asc';
+
     try {
       await this.client.connect();
 
@@ -202,6 +204,7 @@ class MongoClientService {
         .db(environment.DB_NAME)
         .collection(collectionName)
         .find(filter)
+        .sort(sortBy, sortDirection)
         .limit(limit < 100 ? limit : 100)
         .toArray();
 
