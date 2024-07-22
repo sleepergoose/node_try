@@ -125,14 +125,12 @@ class ProductService {
     return await this.mongoClientService.deleteDocumentById(this.collectionName, sanitizedId);
   };
 
-  searchProducts = async (filter) => {
-    const sanitizedFilter = mongoSanitize.sanitize(filter);
+  getRecentProducts = async (limit = 5) => {
+    const filter = {};
+    const sortBy = 'createdAt';
+    const sortDirection = 'desc';
 
-    if (!sanitizedFilter) {
-      throw new NodeError(400, 'Product Service: Filter cannot be null or undefined.');
-    }
-
-    return await this.mongoClientService.searchDocument(this.collectionName, sanitizedFilter);
+    return await this.mongoClientService.searchDocument(this.collectionName, filter, sortBy, sortDirection, limit);
   };
 
   getProductTypes = async () => {

@@ -13,6 +13,7 @@ const NODE_ENV = process.env.NODE_ENV;
 const ORIGIN_URL = process.env.ORIGIN_URL;
 const COOKIE_JWT_ACCESS_EXPIRES_IN = process.env.COOKIE_JWT_ACCESS_EXPIRES_IN;
 const COOKIE_JWT_REFRESH_EXPIRES_IN = process.env.COOKIE_JWT_REFRESH_EXPIRES_IN;
+const RATE_LIMIT = process.env.RATE_LIMIT;
 
 export default {
   APP_PORT,
@@ -30,4 +31,5 @@ export default {
   ORIGIN_URL,
   COOKIE_JWT_ACCESS_EXPIRES_IN,
   COOKIE_JWT_REFRESH_EXPIRES_IN,
+  RATE_LIMIT,
 };

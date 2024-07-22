@@ -9,10 +9,11 @@ productRoutes.get('/paginated', authMiddleware, productController.getPaginatedPr
 productRoutes.get('/all/:limit', authMiddleware, productController.getAllProducts);
 productRoutes.get('/types', authMiddleware, productController.getProductTypes);
 productRoutes.get('/filters', productController.getProductFilterData);
+productRoutes.get('/recent/:limit', authMiddleware, productController.getRecentProducts);
 productRoutes.get('/:id', authMiddleware, productController.getProductById);
+
 productRoutes.post('/', authMiddleware, productController.createProduct);
 productRoutes.put('/', authMiddleware, productController.updateProduct);
 productRoutes.delete('/:id', authMiddleware, productController.deleteProduct);
-productRoutes.post('/search', authMiddleware, productController.searchProducts);
 
 export default productRoutes;
