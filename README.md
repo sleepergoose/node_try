@@ -131,3 +131,30 @@ pnpm install bcrypt
 pnpm install cookie-parser
 pnpm install mongodb
 ```
+
+### Security
+
+**[Helmet](https://www.npmjs.com/package/helmet)**
+
+Helmet helps secure Express apps by setting HTTP response headers.
+
+```shell
+pnpm i helmet
+```
+
+**[express-rate-limit](https://www.npmjs.com/package/express-rate-limit)**
+
+Basic rate-limiting middleware for Express. Use to limit repeated requests to public APIs and/or endpoints such as password reset. 
+
+```shell
+pnpm i express-rate-limit
+```
+
+
+**[express-mongo-sanitize]()**
+
+Express 4.x middleware which sanitizes user-supplied data to prevent MongoDB Operator Injection.
+
+```shell
+pnpm i express-mongo-sanitize
+```
