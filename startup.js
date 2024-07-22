@@ -8,6 +8,8 @@ import errorHandler from './src/middleware/error.handler.js';
 import requestLogMiddleware from './src/middleware/request-log.middleware.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import { rateLimit } from 'express-rate-limit';
 
 const app = express();
 
@@ -18,9 +20,18 @@ const corsOptions = {
   credentials: true,
 };
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+});
+
+app.use(limiter);
 app.use(cors(corsOptions));
-app.use(cookieParser());
+app.use(helmet());
 app.use(express.json());
+app.use(cookieParser());
 app.use(requestLogMiddleware);
 
 app.use('/auth', authRouter);

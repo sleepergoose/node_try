@@ -2,6 +2,7 @@ import MongoClientService from './mongodb.service.js';
 import Product from '../models/product.js';
 import NodeError from '../models/node-error.js';
 import { sortOptions } from '../constants/sortOptions.js';
+import mongoSanitize from 'express-mongo-sanitize';
 import lodash_pkg from 'lodash';
 const { isEmpty, isArray } = lodash_pkg;
 
@@ -24,7 +25,6 @@ class ProductService {
     }
 
     const result = await this.mongoClientService.getDocumentById(this.collectionName, id);
-
     return result;
   };
 
@@ -35,15 +35,18 @@ class ProductService {
   };
 
   getPaginatedProducts = async (page, limit, sortOption, type = null, manufacturer = null) => {
+    const sanitizedType = mongoSanitize.sanitize(type);
+    const sanitizedManufacturer = mongoSanitize.sanitize(manufacturer);
+
     const sort = sortOptions.find(p => p.value === sortOption)?.filter ?? this.#defaultFilter;
 
     const match = {};
     let countFilter = {};
 
-    const _type = { $in: isArray(type) ? type : [type] };
-    const _manufacturer = { $in: isArray(manufacturer) ? manufacturer : [manufacturer] };
+    const _type = { $in: isArray(sanitizedType) ? sanitizedType : [sanitizedType] };
+    const _manufacturer = { $in: isArray(sanitizedManufacturer) ? sanitizedManufacturer : [sanitizedManufacturer] };
 
-    if (type && manufacturer) {
+    if (sanitizedType && sanitizedManufacturer) {
       match.$match = {
         $and: [
           { type: _type },
@@ -55,10 +58,10 @@ class ProductService {
         type: _type,
         manufacturer: _manufacturer
       };
-    } else if (type) {
+    } else if (sanitizedType) {
       countFilter = { type: _type };
       match.$match = countFilter;
-    } else if (manufacturer) {
+    } else if (sanitizedManufacturer) {
       countFilter = { manufacturer: _manufacturer };
       match.$match = countFilter;
     }
@@ -94,36 +97,42 @@ class ProductService {
   };
 
   createProduct = async (product) => {
-    const { name, price, manufacturer, photoUrl } = product;
+    const sanitizedProduct = mongoSanitize.sanitize(product);
+    const { name, price, manufacturer, photoUrl } = sanitizedProduct;
 
     if (!(name && price && manufacturer)) {
       throw new NodeError(400, 'Product Controller: there are no required product\'s params.');
     }
 
-    const objectId = await this.mongoClientService.insertDocument(this.collectionName, product);
+    const objectId = await this.mongoClientService.insertDocument(this.collectionName, sanitizedProduct);
 
     return new Product(objectId, name, price, manufacturer, photoUrl);
   };
 
   updateProduct = async (product) => {
-    await this.mongoClientService.updateDocument(this.collectionName, product);
-    return product;
+    const sanitizedProduct = mongoSanitize.sanitize(product);
+    await this.mongoClientService.updateDocument(this.collectionName, sanitizedProduct);
+    return sanitizedProduct;
   };
 
   deleteProduct = async (id) => {
-    if (!id) {
+    const sanitizedId = mongoSanitize.sanitize(id);
+
+    if (!sanitizedId) {
       throw new NodeError(400, 'Product Service: User id cannot be null or undefined.');
     }
 
-    return await this.mongoClientService.deleteDocumentById(this.collectionName, id);
+    return await this.mongoClientService.deleteDocumentById(this.collectionName, sanitizedId);
   };
 
   searchProducts = async (filter) => {
-    if (!filter) {
+    const sanitizedFilter = mongoSanitize.sanitize(filter);
+
+    if (!sanitizedFilter) {
       throw new NodeError(400, 'Product Service: Filter cannot be null or undefined.');
     }
 
-    return await this.mongoClientService.searchDocument(this.collectionName, filter);
+    return await this.mongoClientService.searchDocument(this.collectionName, sanitizedFilter);
   };
 
   getProductTypes = async () => {
