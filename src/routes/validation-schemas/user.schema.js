@@ -1,21 +1,7 @@
-import { checkSchema, validationResult } from 'express-validator';
-import NodeError from '../../models/node-error.js';
+import { checkSchema } from 'express-validator';
+import { errorHandler } from './error-handler.js';
 
-const errorHandler = (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    throw new NodeError(400, [{
-      type: 'validation',
-      method: 'getUserById',
-      endpoint: '/users/:id',
-    }, ...errors.array()]);
-  }
-
-  next();
-};
-
-export const getUserByIdShemaValidator = [checkSchema({
+export const getUserByIdSchemaValidator = [checkSchema({
   id: {
     in: ['params'],
     errorMessage: 'ID has incorrect format',
@@ -27,7 +13,7 @@ export const getUserByIdShemaValidator = [checkSchema({
   }
 }), errorHandler];
 
-export const updateUserShemaValidator = [checkSchema({
+export const updateUserSchemaValidator = [checkSchema({
   _id: {
     errorMessage: 'ID has incorrect format',
     isHexadecimal: true,
