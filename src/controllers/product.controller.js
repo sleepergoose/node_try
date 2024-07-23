@@ -33,6 +33,7 @@ class ProductController {
 
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
+
     const sortOption = sortOptions
       .map(p => p.value)
       .includes(req.query.sortOption) ? req.query.sortOption : 'priceUp';

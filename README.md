@@ -167,3 +167,11 @@ An express.js middleware for validator.
 ```shell
 pnpm i express-validator
 ```
+
+**[@braintree/sanitize-url](https://www.npmjs.com/package/@braintree/sanitize-url)**
+
+To sanitize URLs.
+
+```shell
+pnpm i @braintree/sanitize-url
+```
