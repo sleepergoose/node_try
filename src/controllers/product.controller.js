@@ -79,7 +79,7 @@ class ProductController {
   getRecentProducts = async (req, res, next) => {
     try {
       const limit = Number(req.params.limit) || 5;
-      const products = await this.productService.getRecentProducts(limit > 10 ? 10 : 5);
+      const products = await this.productService.getRecentProducts(limit > 10 ? 10 : limit);
       res.send(products);
     } catch (error) {
       next(error);

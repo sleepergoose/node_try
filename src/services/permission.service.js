@@ -9,7 +9,7 @@ class PermissionService {
     context.userRole === Roles.ADMIN;
 
   isUserCanRequestUserData = (context, requesteUserId) =>
-    requesteUserId === context.userId() || context.userRole === Roles.ADMIN;
+    requesteUserId === context.userId || context.userRole === Roles.ADMIN;
 }
 
 export default PermissionService;

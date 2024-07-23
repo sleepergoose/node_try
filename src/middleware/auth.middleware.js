@@ -27,11 +27,9 @@ const authMiddleware = (req, res, next) => {
     };
 
     const decoded = jsonwebtoken.verify(accessToken, secretKey, options);
-    req.userId = decoded.userId;
 
-    const context = new Context(decoded.userId, decoded.userRole);
+    req.locals = new Context(decoded.userId, decoded.userRole);
 
-    req.locals = context;
     next();
   } catch {
     if (!refreshToken) {
@@ -50,6 +48,9 @@ const authMiddleware = (req, res, next) => {
       };
 
       const refreshDecoded = jsonwebtoken.verify(refreshToken, refreshSecretKey, refreshOptions);
+
+      req.locals = new Context(refreshDecoded.userId, refreshDecoded.userRole);
+
       const newAccessToken = AuthService.generateAccessJwt({ _id: refreshDecoded.userId, role: refreshDecoded.userRole });
 
       res.cookie('refreshToken', refreshToken, {
