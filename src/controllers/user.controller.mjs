@@ -32,15 +32,6 @@ class UserController {
     }
   };
 
-  createUser = async (req, res, next) => {
-    try {
-      const user = await this.userService.createUser(req.body);
-      res.send(user);
-    } catch (error) {
-      next(error);
-    }
-  };
-
   updateUser = async (req, res, next) => {
     try {
       const userId = req.body?.id || req.body?._id;

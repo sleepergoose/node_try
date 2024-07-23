@@ -152,10 +152,26 @@ pnpm i express-rate-limit
 ```
 
 
-**[express-mongo-sanitize]()**
+**[express-mongo-sanitize](https://www.npmjs.com/package/express-mongo-sanitize)**
 
 Express 4.x middleware which sanitizes user-supplied data to prevent MongoDB Operator Injection.
 
 ```shell
 pnpm i express-mongo-sanitize
+```
+
+**[express-validator](https://www.npmjs.com/package/express-validator)**
+
+An express.js middleware for validator.
+
+```shell
+pnpm i express-validator
+```
+
+**[@braintree/sanitize-url](https://www.npmjs.com/package/@braintree/sanitize-url)**
+
+To sanitize URLs.
+
+```shell
+pnpm i @braintree/sanitize-url
 ```
