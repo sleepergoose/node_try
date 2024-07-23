@@ -7,7 +7,7 @@ const errorHandler = (err, req, res, next) => {
   if (err instanceof NodeError) {
     res.status(err.statusCode).json({ message: 'Bad Request' });
   } else {
-    res.status(50).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
